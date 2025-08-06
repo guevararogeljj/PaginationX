@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>PaginationX</Title>
+        <Description>Pagination</Description>
+        <Copyright>JJGR</Copyright>
+        <PackageProjectUrl>https://github.com/users/guevararogeljj/projects/3</PackageProjectUrl>
+        <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/guevararogeljj/PaginationX</RepositoryUrl>
+        <PackageTags>C#</PackageTags>
+    </PropertyGroup>
+
+</Project>
