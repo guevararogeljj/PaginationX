@@ -1,17 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Title>PaginationX</Title>
-        <Description>Pagination</Description>
-        <Copyright>JJGR</Copyright>
-        <PackageProjectUrl>https://github.com/users/guevararogeljj/projects/3</PackageProjectUrl>
-        <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-        <RepositoryUrl>https://github.com/guevararogeljj/PaginationX</RepositoryUrl>
-        <PackageTags>C#</PackageTags>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- Asegúrate de que el TargetFramework sea el adecuado para tu librería -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Metadatos del Paquete NuGet -->
+    <PackageId>PaginationX</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>guevararogeljj</Authors>
+    <Description>Una librería para paginación.</Description>
+    <PackageTags>pagination paging</PackageTags>
+    <RepositoryUrl>https://github.com/guevararogeljj/PaginationX.git</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!-- Opcional: Genera el paquete en cada compilación en modo Release -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="examples\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackagePath>examples</PackagePath>
+    </Content>
+  </ItemGroup>
 
 </Project>

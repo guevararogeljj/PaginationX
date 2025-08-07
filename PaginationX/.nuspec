@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <!-- metadatos del paquete -->
+    </metadata>
+    <files>
+        <file src="examples/**" target="examples" />
+    </files>
+</package>

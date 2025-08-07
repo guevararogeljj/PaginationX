@@ -1,0 +1,104 @@
+
+    ///repository
+    public interface IAppointmentRepository
+    {
+        Task<PagedResult<Appointment>> GetPagedAsync(PaginationRequest request);
+        
+    }
+    public async Task<PagedResult<Appointment>> GetPagedAsync(PaginationRequest request)
+    {
+        var totalCount = await _context.Appointments.CountAsync();
+        var items = await _context.Appointments
+            .Include(a => a.Patient)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<Appointment>(items, totalCount, request.PageNumber, request.PageSize);
+    }
+   public async Task<PagedResult<Appointment>> GetPagedAsync(PaginationRequest request)
+    {
+        var totalCount = await _context.Appointments.CountAsync();
+        var items = await _context.Appointments
+            .Include(a => a.Patient)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<Appointment>(items, totalCount, request.PageNumber, request.PageSize);
+    }
+
+
+    ///cqrs query
+    public class GetPagedAsyncQuery :  IRequest<Response<PagedResult<AppointmentDto>>>
+    {
+        public PaginationRequest Pagination { get; set; }
+        public GetPagedAsyncQuery(PaginationRequest pagination)
+        {
+            Pagination = pagination;
+        }
+    
+        public GetPagedAsyncQuery()
+        {
+            
+        }
+    }
+    
+    ///cqrs handler
+    public class GetPagedAsyncQueryHandler : IRequestHandler<GetPagedAsyncQuery, Response<PagedResult<AppointmentDto>>>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public GetPagedAsyncQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        public async Task<Response<PagedResult<AppointmentDto>>> Handle(GetPagedAsyncQuery request, CancellationToken cancellationToken)
+        {
+            var response = new Response<PagedResult<AppointmentDto>>();
+            try
+            {
+                var appointments = await _unitOfWork.Appointments.GetPagedAsync(request.Pagination);
+                if (appointments.Items.Any())
+                {
+                    var appointmentDtos = _mapper.Map<List<AppointmentDto>>(appointments.Items);
+                    response.Result = new PagedResult<AppointmentDto>(
+                        appointmentDtos.ToList(),
+                        appointments.TotalCount,
+                        appointments.CurrentPage,
+                        appointments.PageSize
+                    );
+                }
+                else
+                {
+                    response.Error = new Error(
+                        "NoAppointmentsFound",
+                        "No appointments found for the specified criteria."
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Error = new Error(
+                    "GetPagedAsyncError",
+                    $"An error occurred while retrieving paged appointments: {ex.Message}"
+                );
+            }
+            
+            return response;
+        }
+    }
+    
+    ///controller
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPaged([FromQuery] GetPagedAsyncQuery query)
+        {
+            var result = await _mediator.Send(query);
+            if (result.Error != null)
+            {
+                return Problem(statusCode: 400, title: result.Error.Code, detail: result.Error.Message);
+            }
+    
+            return Ok(result.Result);
+        }
